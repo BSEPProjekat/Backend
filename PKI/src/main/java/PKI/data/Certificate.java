@@ -13,6 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class Certificate {
 
+    private String alias;
     private Subject subject;
     private Issuer issuer;
     private String serialNumber;
@@ -21,6 +22,5 @@ public class Certificate {
 
     // svi prethodni podaci mogu da se izvuku i iz X509Certificate, osim privatnog kljuca issuera
     private X509Certificate x509Certificate;
-
 
 }

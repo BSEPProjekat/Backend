@@ -17,4 +17,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 jwt:
-  secret: ${JWT_SECRET}
+  secret: yL9w2T!mA7f@Q3rZ$kV1‚nX4eP9jH6bD0uS#tW8oG51C2yF7vMrE3M!p6&nb3#cl$
+
+logging:
+  level:
+    org.springframework.security: DEBUG

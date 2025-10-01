@@ -19,6 +19,7 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
     public JwtAuthFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService){
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        System.out.println(">>> JwtAuthFilter bean created <<<");
     }
 
     @Override
@@ -27,10 +28,12 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
                                     FilterChain filterChain)
         throws ServletException, IOException{
         String authHeader = request.getHeader("Authorization");
+        System.out.println(authHeader);
 
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             String jwt = authHeader.substring(7);
             String username = jwtUtil.extractUsername(jwt);
+
 
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 var userDetails = userDetailsService.loadUserByUsername(username);

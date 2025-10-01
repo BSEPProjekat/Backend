@@ -1,17 +1,13 @@
 package PKI.controller;
 
 import PKI.domain.dto.LoginDto;
-import PKI.domain.model.User;
 import PKI.repository.UserRepository;
 import PKI.util.JwtUtil;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
