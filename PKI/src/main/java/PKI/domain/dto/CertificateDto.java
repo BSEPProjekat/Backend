@@ -14,5 +14,6 @@ public class CertificateDto {
     public String startDate;
     public String endDate;
     public String publicKey;
+    public String serialNumber;
     public CertificateDto(){}
 }

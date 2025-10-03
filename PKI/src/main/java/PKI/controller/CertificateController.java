@@ -2,6 +2,7 @@ package PKI.controller;
 
 import PKI.data.Certificate;
 import PKI.domain.dto.CertificateDto;
+import PKI.domain.dto.IssueCertificateRequestDto;
 import PKI.service.CertificateService;
 import jakarta.validation.Valid;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -35,14 +36,14 @@ public class CertificateController {
     }
 
     @PostMapping("/issueRootCertificate")
-    public ResponseEntity<String> issueCertificate(@Valid @RequestBody CertificateDto certificateDto) {
+    public ResponseEntity<String> issueRootCertificate(@Valid @RequestBody CertificateDto certificateDto) {
         certificateService.issueRootCertificate(certificateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Certificate issued successfully");
     }
 
     @GetMapping("/getRootCertificates")
     public ResponseEntity<List<CertificateDto>> getRootCertificates() {
-        List<Certificate> rootCertificates = certificateService.getRootCertificates();
+        List<Certificate> rootCertificates = certificateService.getCertificates();
         List<CertificateDto> rootCertificateDtos = new ArrayList<>();
 
         for (Certificate cert : rootCertificates) {
@@ -90,12 +91,20 @@ public class CertificateController {
         dto.alias = cert.getAlias();
         dto.startDate = String.valueOf(x509.getNotBefore().getTime());
         dto.endDate = String.valueOf(x509.getNotAfter().getTime());
+        dto.serialNumber = String.valueOf(x509.getSerialNumber());
         dto.publicKey = Base64.getEncoder().encodeToString(x509.getPublicKey().getEncoded());
 
         return dto;
     }
 
-
+    @PostMapping("/issueCertificate")
+    public ResponseEntity<String> issueCertificate(@Valid @RequestBody IssueCertificateRequestDto issueCertificateRequestDto) {
+        certificateService.issueCertificate(
+                issueCertificateRequestDto.certificate,
+                issueCertificateRequestDto.issuerSerialNumber
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body("Certificate issued successfully");
+    }
 
 
 }

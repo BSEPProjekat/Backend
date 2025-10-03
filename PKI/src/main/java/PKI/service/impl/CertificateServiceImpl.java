@@ -11,6 +11,7 @@ import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
@@ -37,12 +38,13 @@ public class CertificateServiceImpl implements CertificateService {
             Date startDate = sdf.parse(certificateDto.startDate);
             Date endDate = sdf.parse(certificateDto.endDate);
 
-            String serialNumber = "1";
+            SecureRandom random = new SecureRandom();
+            BigInteger serialNumber = new BigInteger(128, random).abs();
 
             X509Certificate x509Certificate = CertificateGenerator.generateCertificate(subject,
-                    issuer, startDate, endDate, serialNumber);
+                    issuer, startDate, endDate, String.valueOf(serialNumber));
 
-            var certificate = new Certificate(alias, subject, issuer, serialNumber, startDate, endDate, x509Certificate);
+            var certificate = new Certificate(alias, subject, issuer, String.valueOf(serialNumber), startDate, endDate, x509Certificate);
 
             certificateRepository.issueRootCertificate(certificate);
 
@@ -94,7 +96,35 @@ public class CertificateServiceImpl implements CertificateService {
         }
         return null;
     }
-    public List<Certificate> getRootCertificates(){
-        return certificateRepository.getRootCertificates();
+    public List<Certificate> getCertificates(){
+        return certificateRepository.getCertificates();
+    }
+
+    public void issueCertificate(CertificateDto certificateDto, String issuerSerialNumber){
+        try{
+
+            BigInteger number = new BigInteger(issuerSerialNumber);
+            String alias = certificateDto.alias;
+            var subject = generateSubject(certificateDto);
+            var issuer = certificateRepository.getIssuer(number);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = sdf.parse(certificateDto.startDate);
+            Date endDate = sdf.parse(certificateDto.endDate);
+
+            SecureRandom random = new SecureRandom();
+            BigInteger serialNumber = new BigInteger(128, random).abs();
+
+            X509Certificate x509Certificate = CertificateGenerator.generateCertificate(subject,
+                    issuer, startDate, endDate, String.valueOf(serialNumber));
+
+            var certificate = new Certificate(alias, subject, issuer, String.valueOf(serialNumber), startDate, endDate, x509Certificate);
+
+            certificateRepository.issueCertificate(certificate, number);
+
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
     }
 }

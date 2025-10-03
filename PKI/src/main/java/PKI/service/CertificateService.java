@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface CertificateService {
     public void issueRootCertificate(CertificateDto certificateDto);
-    public List<Certificate> getRootCertificates();
+    public List<Certificate> getCertificates();
+    public void issueCertificate(CertificateDto certificateDto, String issuerSerialNumber);
 }
